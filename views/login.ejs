@@ -1,8 +1,9 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
+<link rel="stylesheet" href="style.css">
 
 <form action="/login" method="POST">
-    <section class="hero is-link is-fullheight">
+    <section class="hero is-fullheight back">
       <% if(messages.error){ %>
         <%= messages.error %>
       <% } %>
@@ -12,7 +13,7 @@
               <div class="column is-5-tablet is-4-desktop is-3-widescreen">
                 <form action="" class="box">
                   <div class="field">
-                    <label for="" class="label">Email</label>
+                    <label for="" class="label has-text-white">Email</label>
                     <div class="control has-icons-left">
                       <input type="email" placeholder="math@email.com" class="input" name="email" required>
                       <span class="icon is-small is-left">
@@ -21,7 +22,7 @@
                     </div>
                   </div>
                   <div class="field">
-                    <label for="" class="label">Password</label>
+                    <label for="" class="label has-text-white">Password</label>
                     <div class="control has-icons-left">
                       <input type="password" placeholder="*******" class="input" name="password" required>
                       <span class="icon is-small is-left">
@@ -30,9 +31,10 @@
                     </div>
                   </div>
                   <div class="field">
-                    <button class="button is-success" type="submit">Login</button>
                     <br>
-                    <a href="/register">register</a>
+                    <button class="button is-fullwidth is-rounded is-warning" type="submit">Login</button>
+                    <br>
+                    <a href="/register" class="has-text-link is-half">register</a>
                   </div>
                 </form>
               </div>
