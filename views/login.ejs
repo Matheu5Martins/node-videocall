@@ -12,7 +12,13 @@
                   <% if(success_msg != '') { %>
                   <div class="notification is-success" role="alert">              
                         <%= success_msg %>
-                    <button class="delete" data-dismiss="alert" aria-label="Close"></button>
+                        <button id="btn" class="delete" onclick="this.parentElement.style.display='none';buttonPrevent(event)"></button>
+                  </div>
+                  <% } %> 
+                  <% if(error != '') { %>
+                  <div class="notification is-danger" role="alert">              
+                        <%= error %>
+                        <button id="btn" class="delete" onclick="this.parentElement.style.display='none';buttonPrevent(event)"></button>
                   </div>
                   <% } %> 
                   <div class="field">
@@ -46,3 +52,9 @@
         </div>
       </section>
 </form>
+
+<script>
+function buttonPrevent(event){
+    event.preventDefault()
+  }
+</script>

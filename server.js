@@ -1,20 +1,33 @@
 const express = require('express')
 const app = express()
-const cors = require('cors')
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
+
+const cors = require('cors')
+
+
 const { ExpressPeerServer } = require('peer')
 const peerServer = ExpressPeerServer(server, {debug: true})
+
 const methodOverride = require('method-override')
+
 const flash = require('express-flash')
 const session = require('express-session')
+
 const { v4: uuidV4 } = require('uuid')
+
 const bcrypt = require('bcrypt')
 const passport = require('passport')
+
 const mongoose = require('mongoose')
 const db = require('./config/keys').MongoURI
-const User = require('./models/user')
+const User = require('./models/User')
 
+
+// Passport config
+require('./config/passport')(passport)
+
+// Connect with DB
 mongoose.connect(db, { 
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -22,25 +35,45 @@ mongoose.connect(db, {
   .then(() => console.log('db connect'))
   .catch(err =>  console.log(err))
 
+// EJS engine
 app.set('view engine', 'ejs')
+
+
 app.use(express.static('public'))
+
+// Peerjs
 app.use('/peerjs', peerServer)
+
+// Bodyparser
 app.use(express.urlencoded({ extended: false }))
-app.use(flash())
+
+
+// Express Session
 app.use(session({
-  secret: 'aaaaaaaaaaaaaaa',
+  secret: 'secret',
   resave: false,
   saveUninitialized: true
 }))
 
+// Passport middleware
+app.use(passport.initialize())
+app.use(passport.session())
+
+// Connect flash
+app.use(flash())
+
+// Global var
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg')
   res.locals.error_msg = req.flash('error_msg')
+  res.locals.error = req.flash('error')
   next()
 })
-app.use(passport.initialize())
-app.use(passport.session())
+
+// method to disconnect
 app.use(methodOverride('_method'))
+
+// Cors
 app.use(cors())
 
 app.get('/', checkAuthenticated, (req, res) =>{
@@ -107,7 +140,7 @@ app.post('/register', checkNotAuthenticated, async (req, res) =>{
           newUser.password = hash
           newUser.save()
           .then(user => {
-            req.flash('success_msg', 'Você agora está registrado.')
+            req.flash('success_msg', 'Você agora está registrado!')
             res.redirect('/login')
           })
           .catch(err => {
@@ -120,11 +153,14 @@ app.post('/register', checkNotAuthenticated, async (req, res) =>{
   }
 })
 
-app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-  successRedirect: '/createroom',
-  failureRedirect: '/login',
-  failureFlash: true
-}))
+app.post('/login', checkNotAuthenticated, (req, res, next) => { 
+  passport.authenticate('local', {
+    successRedirect: '/createroom',
+    failureRedirect: '/login',
+    badRequestMessage: 'Digite suas credenciais.',
+    failureFlash: true
+  })(req, res, next);
+})
 
 app.delete('/logout', (req, res) => {
   req.logOut()
