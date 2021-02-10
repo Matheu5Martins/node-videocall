@@ -5,6 +5,9 @@ const io = require('socket.io')(server)
 
 const cors = require('cors')
 
+// Favicon
+var favicon = require('serve-favicon')
+var path = require('path')
 
 const { ExpressPeerServer } = require('peer')
 const peerServer = ExpressPeerServer(server, {debug: true})
@@ -70,11 +73,14 @@ app.use((req, res, next) => {
   next()
 })
 
-// method to disconnect
+app.use(favicon(path.join(__dirname, 'favicon.ico')))
+
+// Method to disconnect
 app.use(methodOverride('_method'))
 
 // Cors
 app.use(cors())
+
 
 app.get('/', checkAuthenticated, (req, res) =>{
   res.render('index.ejs', { name: req.body.name })
