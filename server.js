@@ -24,7 +24,7 @@ const passport = require('passport')
 
 const mongoose = require('mongoose')
 const db = require('./config/keys').MongoURI
-const User = require('./models/User')
+const User = require('./models/user')
 
 
 // Passport config
