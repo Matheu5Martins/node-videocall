@@ -41,7 +41,6 @@ mongoose.connect(db, {
 // EJS engine
 app.set('view engine', 'ejs')
 
-
 app.use(express.static('public'))
 
 // Peerjs
@@ -83,7 +82,7 @@ app.use(cors())
 
 
 app.get('/', checkAuthenticated, (req, res) =>{
-  res.render('index.ejs', { name: req.body.name })
+  res.redirect('/login')
 })
 
 app.get('/createroom', checkAuthenticated, (req, res) => {
